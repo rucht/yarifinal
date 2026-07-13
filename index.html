@@ -664,15 +664,17 @@ function renderPredictionUI() {
 function renderPenaltyUI(m) {
     if (!pState.pens.active) return '';
     let pen = pState.pens;
-    let t1Takers = TEAMS[m.t1].penTakers;
-    let t2Takers = TEAMS[m.t2].penTakers;
+    
+    // İlk 5 penaltıcıyı al, ardından 11'deki diğer oyuncuları listeye ekle
+    let t1AllTakers = [...TEAMS[m.t1].penTakers, ...TEAMS[m.t1].xi.filter(p => !TEAMS[m.t1].penTakers.includes(p))];
+    let t2AllTakers = [...TEAMS[m.t2].penTakers, ...TEAMS[m.t2].xi.filter(p => !TEAMS[m.t2].penTakers.includes(p))];
     
     let activeTeamIdx = (pen.turn % 2 !== 0) ? 0 : 1;
-    let activePlayerList = activeTeamIdx === 0 ? t1Takers : t2Takers;
+    let activePlayerList = activeTeamIdx === 0 ? t1AllTakers : t2AllTakers;
     
-    // Sıra hesaplama (0,1,2,3,4...) -> 5'ten sonra mod al başa dön
+    // Sıra hesaplama: 11 kişiden sonra başa döner (% 11)
     let roundIndex = Math.floor((pen.turn - 1) / 2);
-    let activePlayer = activePlayerList[roundIndex % 5];
+    let activePlayer = activePlayerList[roundIndex % 11];
     
     let score1 = pen.history1.filter(x=>x).length;
     let score2 = pen.history2.filter(x=>x).length;

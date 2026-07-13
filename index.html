@@ -504,6 +504,7 @@ function switchTab(name){
   }
   if(name==="results") { renderResults(); updateLeaderboards(); }
 }
+window.switchTab = switchTab;
 document.querySelectorAll(".tab-btn").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));
 
 function flag(t){return TEAMS[t]?.flag||"🏳️"}
